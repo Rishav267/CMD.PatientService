@@ -9,6 +9,7 @@ namespace CMD.PatientService.Domain.Repositories
 {
     public interface IPatientRepository
     {
+        #region Sync
         ICollection<Patient> GetAllPatient();
         Patient GetPatientById(int id);
 
@@ -19,5 +20,19 @@ namespace CMD.PatientService.Domain.Repositories
         ICollection<MedicalProblem> GetMedicalProblemsById(int id);
 
         ICollection<ActiveIssue> GetActiveIssuesById(int id);
+        #endregion
+
+        #region Async
+        Task<ICollection<Patient>> GetAllPatientAsync();
+        Task<Patient> GetPatientByIdAsync(int id);
+
+        Task<ICollection<Symptom>> GetSymptomsByPatIdAsync(int id);
+
+        Task<ICollection<Allergy>> GetAllergiesByIdAsync(int id);
+
+        Task<ICollection<MedicalProblem>> GetMedicalProblemsByIdAsync(int id);
+
+        Task<ICollection<ActiveIssue>> GetActiveIssuesByIdAsync(int id);
+        #endregion
     }
 }

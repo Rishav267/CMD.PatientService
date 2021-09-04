@@ -12,7 +12,7 @@ namespace CMD.PatientService.Domain.Managers
 {
     public class Manager : IManager
     {
-        private readonly IPatientRepository _patientRepository ;
+        private readonly IPatientRepository _patientRepository;
 
         public Manager()
         {
@@ -24,6 +24,7 @@ namespace CMD.PatientService.Domain.Managers
             _patientRepository = repository;
         }
 
+        #region Sync
         public IEnumerable<ActiveIssueAPIModel> GetActiveIssuesById(int id)
         {
             var activeissues = _patientRepository.GetActiveIssuesById(id);
@@ -38,11 +39,7 @@ namespace CMD.PatientService.Domain.Managers
             return result;
         }
 
-        public Task<IEnumerable<ActiveIssueAPIModel>> GetActiveIssuesByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public IEnumerable<AllergyAPIModel> GetAllergiesById(int id)
         {
             var alleries = _patientRepository.GetAllergiesById(id);
@@ -57,10 +54,7 @@ namespace CMD.PatientService.Domain.Managers
             return result;
         }
 
-        public Task<IEnumerable<AllergyAPIModel>> GetAllergiesByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public IEnumerable<PatientAPIModel> GetAllPatient()
         {
@@ -79,10 +73,7 @@ namespace CMD.PatientService.Domain.Managers
             return result;
         }
 
-        public Task<IEnumerable<PatientAPIModel>> GetAllPatientAsync()
-        {
-            throw new NotImplementedException();
-        }
+
 
         public IEnumerable<MedicalProblemAPIModel> GetMedicalProblemsById(int id)
         {
@@ -98,10 +89,7 @@ namespace CMD.PatientService.Domain.Managers
             return result;
         }
 
-        public Task<IEnumerable<MedicalProblemAPIModel>> GetMedicalProblemsByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public PatientAPIModel GetPatientById(int id)
         {
@@ -114,10 +102,7 @@ namespace CMD.PatientService.Domain.Managers
             return newItem;
         }
 
-        public Task<PatientAPIModel> GetPatientByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public IEnumerable<SymptomAPIModel> GetSymptomsByPatId(int id)
         {
@@ -133,9 +118,86 @@ namespace CMD.PatientService.Domain.Managers
             return result;
         }
 
-        public Task<IEnumerable<SymptomAPIModel>> GetSymptomsByPatIdAsync(int id)
+        #endregion
+
+        #region Async
+        public async Task<IEnumerable<ActiveIssueAPIModel>> GetActiveIssuesByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var activeissues = await _patientRepository.GetActiveIssuesByIdAsync(id);
+            ICollection<ActiveIssueAPIModel> result = new List<ActiveIssueAPIModel>();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<ActiveIssue, ActiveIssueAPIModel>());
+            var mapper = new Mapper(config);
+
+            foreach (var item in activeissues)
+            {
+                result.Add(mapper.Map<ActiveIssueAPIModel>(item));
+            }
+            return result;
         }
+
+        public async Task<IEnumerable<AllergyAPIModel>> GetAllergiesByIdAsync(int id)
+        {
+            var alleries = await _patientRepository.GetAllergiesByIdAsync(id);
+            ICollection<AllergyAPIModel> result = new List<AllergyAPIModel>();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Allergy, AllergyAPIModel>());
+            var mapper = new Mapper(config);
+
+            foreach (var item in alleries)
+            {
+                result.Add(mapper.Map<AllergyAPIModel>(item));
+            }
+            return result;
+        }
+
+        public async Task<IEnumerable<PatientAPIModel>> GetAllPatientAsync()
+        {
+            var patient = await _patientRepository.GetAllPatientAsync();
+            ICollection<PatientAPIModel> result = new List<PatientAPIModel>();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Patient, PatientAPIModel>());
+            var mapper = new Mapper(config);
+
+            foreach (var item in patient)
+            {
+                result.Add(mapper.Map<PatientAPIModel>(item));
+            }
+            return result;
+        }
+
+        public async Task<IEnumerable<MedicalProblemAPIModel>> GetMedicalProblemsByIdAsync(int id)
+        {
+            var problem = await _patientRepository.GetMedicalProblemsByIdAsync(id);
+            ICollection<MedicalProblemAPIModel> result = new List<MedicalProblemAPIModel>();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<MedicalProblem, MedicalProblemAPIModel>());
+            var mapper = new Mapper(config);
+
+            foreach (var item in problem)
+            {
+                result.Add(mapper.Map<MedicalProblemAPIModel>(item));
+            }
+            return result;
+        }
+
+        public async Task<PatientAPIModel> GetPatientByIdAsync(int id)
+        {
+            var patient = await _patientRepository.GetPatientByIdAsync(id);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Patient, PatientAPIModel>());
+            var mapper = new Mapper(config);
+            return mapper.Map<PatientAPIModel>(patient);
+        }
+
+        public async Task<IEnumerable<SymptomAPIModel>> GetSymptomsByPatIdAsync(int id)
+        {
+            var symptoms = await _patientRepository.GetSymptomsByPatIdAsync(id);
+            ICollection<SymptomAPIModel> result = new List<SymptomAPIModel>();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Symptom, SymptomAPIModel>());
+            var mapper = new Mapper(config);
+
+            foreach (var item in symptoms)
+            {
+                result.Add(mapper.Map<SymptomAPIModel>(item));
+            }
+            return result;
+        }
+        #endregion
     }
 }
