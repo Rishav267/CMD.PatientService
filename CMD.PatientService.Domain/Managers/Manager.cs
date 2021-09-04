@@ -38,6 +38,11 @@ namespace CMD.PatientService.Domain.Managers
             return result;
         }
 
+        public Task<IEnumerable<ActiveIssueAPIModel>> GetActiveIssuesByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<AllergyAPIModel> GetAllergiesById(int id)
         {
             var alleries = _patientRepository.GetAllergiesById(id);
@@ -50,6 +55,11 @@ namespace CMD.PatientService.Domain.Managers
                 result.Add(mapper.Map<AllergyAPIModel>(item));
             }
             return result;
+        }
+
+        public Task<IEnumerable<AllergyAPIModel>> GetAllergiesByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<PatientAPIModel> GetAllPatient()
@@ -69,6 +79,11 @@ namespace CMD.PatientService.Domain.Managers
             return result;
         }
 
+        public Task<IEnumerable<PatientAPIModel>> GetAllPatientAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<MedicalProblemAPIModel> GetMedicalProblemsById(int id)
         {
             var problem = _patientRepository.GetMedicalProblemsById(id);
@@ -83,6 +98,11 @@ namespace CMD.PatientService.Domain.Managers
             return result;
         }
 
+        public Task<IEnumerable<MedicalProblemAPIModel>> GetMedicalProblemsByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public PatientAPIModel GetPatientById(int id)
         {
             var patient = _patientRepository.GetPatientById(id);
@@ -92,6 +112,11 @@ namespace CMD.PatientService.Domain.Managers
             var year = DateTime.Now.Year - newItem.DateOfBirth.Year;
             newItem.Age = year.ToString();
             return newItem;
+        }
+
+        public Task<PatientAPIModel> GetPatientByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<SymptomAPIModel> GetSymptomsByPatId(int id)
@@ -106,6 +131,11 @@ namespace CMD.PatientService.Domain.Managers
                 result.Add(mapper.Map<SymptomAPIModel>(item));
             }
             return result;
+        }
+
+        public Task<IEnumerable<SymptomAPIModel>> GetSymptomsByPatIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

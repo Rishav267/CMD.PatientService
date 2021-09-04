@@ -3,6 +3,7 @@ using PatientWebAPIServices.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Unity;
@@ -13,6 +14,8 @@ namespace PatientWebAPIServices.Controllers
     public class PatientController : ApiController
     {        
         private readonly IManager manager = ManagerFactory.CreateManager();
+
+        #region sync
         public IHttpActionResult GetAllPatients()
         {
             var result = manager.GetAllPatient();
@@ -49,6 +52,41 @@ namespace PatientWebAPIServices.Controllers
             var allergies = manager.GetAllergiesById(id);
             return Ok(allergies);
         }
+        #endregion
 
+
+        #region Async
+        public async Task<IHttpActionResult> GetAllPatientsAsync()
+        {
+            return Ok(await manager.GetAllPatientAsync());
+        }
+
+        [Route("patient/{id}")]
+        public async Task<IHttpActionResult> GetPatientByIdAsync(int id)
+        {
+            return Ok(await manager.GetPatientByIdAsync(id));
+        }
+        [Route("symptom/{id}")]
+        public async Task<IHttpActionResult> GetSymptomByIdAsync(int id)
+        {
+            
+            return Ok(await manager.GetSymptomsByPatIdAsync(id));
+        }
+        [Route("activeissue/{id}")]
+        public async Task<IHttpActionResult> GetctiveIssuesAsync(int id)
+        {
+            return Ok(await manager.GetActiveIssuesByIdAsync(id));
+        }
+        [Route("medicalproblem/{id}")]
+        public async Task<IHttpActionResult> GetMedicalProblemsByIdAsync(int id)
+        {
+            return Ok(await manager.GetMedicalProblemsByIdAsync(id));
+        }
+        [Route("allergy/{id}")]
+        public async Task<IHttpActionResult> GetAllergiesByIdAsync(int id)
+        {
+            return Ok(await manager.GetAllergiesByIdAsync(id));
+        }
+        #endregion
     }
 }
