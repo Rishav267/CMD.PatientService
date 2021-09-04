@@ -23,6 +23,7 @@ namespace UnitTestPatientService
         [TestMethod]
         public void TestMethod1()
         {
+            int i1 = 0;
         }
     }
 }
