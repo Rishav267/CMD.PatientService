@@ -158,7 +158,10 @@ namespace CMD.PatientService.Domain.Managers
 
             foreach (var item in patient)
             {
-                result.Add(mapper.Map<PatientAPIModel>(item));
+                var newItem = mapper.Map<PatientAPIModel>(item);
+                var year = DateTime.Now.Year - newItem.DateOfBirth.Year;
+                newItem.Age = year.ToString();
+                result.Add(newItem);
             }
             return result;
         }
@@ -182,7 +185,10 @@ namespace CMD.PatientService.Domain.Managers
             var patient = await _patientRepository.GetPatientByIdAsync(id);
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Patient, PatientAPIModel>());
             var mapper = new Mapper(config);
-            return mapper.Map<PatientAPIModel>(patient);
+            var newItem = mapper.Map<PatientAPIModel>(patient);
+            var year = DateTime.Now.Year - newItem.DateOfBirth.Year;
+            newItem.Age = year.ToString();
+            return newItem;
         }
 
         public async Task<IEnumerable<SymptomAPIModel>> GetSymptomsByPatIdAsync(int id)
