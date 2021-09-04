@@ -10,6 +10,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{975BF4EE-06D0-4AB8-B58D-2AAE2AEF4E9A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{C863D3E0-0522-4A30-8FA2-1DD20B4EC9EE}"
+	ProjectSection(SolutionItems) = preProject
+		unit.cs = unit.cs
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMD.PatientService.Domain", "CMD.PatientService.Domain\CMD.PatientService.Domain.csproj", "{D84592E1-6717-4D0C-9608-1F59DB6CF62A}"
 EndProject
