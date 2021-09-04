@@ -10,12 +10,13 @@ using Unity;
 
 namespace PatientWebAPIServices.Controllers
 {
-    [RoutePrefix("api/patient")]
+    [RoutePrefix("api")]
     public class PatientController : ApiController
     {        
         private readonly IManager manager = ManagerFactory.CreateManager();
 
         #region sync
+        [Route("patient")]
         public IHttpActionResult GetAllPatients()
         {
             var result = manager.GetAllPatient();
@@ -56,33 +57,34 @@ namespace PatientWebAPIServices.Controllers
 
 
         #region Async
+        [Route("async/patient")]
         public async Task<IHttpActionResult> GetAllPatientsAsync()
         {
             return Ok(await manager.GetAllPatientAsync());
         }
 
-        [Route("patient/{id}")]
+        [Route("async/patient/{id}")]
         public async Task<IHttpActionResult> GetPatientByIdAsync(int id)
         {
             return Ok(await manager.GetPatientByIdAsync(id));
         }
-        [Route("symptom/{id}")]
+        [Route("async/symptom/{id}")]
         public async Task<IHttpActionResult> GetSymptomByIdAsync(int id)
         {
             
             return Ok(await manager.GetSymptomsByPatIdAsync(id));
         }
-        [Route("activeissue/{id}")]
+        [Route("async/activeissue/{id}")]
         public async Task<IHttpActionResult> GetctiveIssuesAsync(int id)
         {
             return Ok(await manager.GetActiveIssuesByIdAsync(id));
         }
-        [Route("medicalproblem/{id}")]
+        [Route("async/medicalproblem/{id}")]
         public async Task<IHttpActionResult> GetMedicalProblemsByIdAsync(int id)
         {
             return Ok(await manager.GetMedicalProblemsByIdAsync(id));
         }
-        [Route("allergy/{id}")]
+        [Route("async/allergy/{id}")]
         public async Task<IHttpActionResult> GetAllergiesByIdAsync(int id)
         {
             return Ok(await manager.GetAllergiesByIdAsync(id));
