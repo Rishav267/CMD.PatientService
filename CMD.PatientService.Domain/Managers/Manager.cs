@@ -5,6 +5,7 @@ using CMD.PatientService.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace CMD.PatientService.Domain.Managers
     public class Manager : IManager
     {
         private readonly IPatientRepository _patientRepository;
+        private readonly ObjectCache _cache = new MemoryCache("PatientCache");
 
         public Manager()
         {
@@ -27,6 +29,10 @@ namespace CMD.PatientService.Domain.Managers
         #region Sync
         public IEnumerable<ActiveIssueAPIModel> GetActiveIssuesById(int id)
         {
+            var cached_activeissues = _cache.Get(String.Concat("ActiveIssue-", id));
+            if (cached_activeissues != null)
+                return (IEnumerable<ActiveIssueAPIModel>)cached_activeissues;
+
             var activeissues = _patientRepository.GetActiveIssuesById(id);
             ICollection<ActiveIssueAPIModel> result = new List<ActiveIssueAPIModel>();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<ActiveIssue, ActiveIssueAPIModel>());
@@ -36,12 +42,16 @@ namespace CMD.PatientService.Domain.Managers
             {
                 result.Add(mapper.Map<ActiveIssueAPIModel>(item));
             }
+            _cache.Set(String.Concat("ActiveIssue-", id), result, DateTimeOffset.Now.AddMinutes(10));
             return result;
         }
 
        
         public IEnumerable<AllergyAPIModel> GetAllergiesById(int id)
         {
+            var cached_alleries = _cache.Get(String.Concat("Allergy-", id));
+            if (cached_alleries != null)
+                return (IEnumerable<AllergyAPIModel>)cached_alleries;
             var alleries = _patientRepository.GetAllergiesById(id);
             ICollection<AllergyAPIModel> result = new List<AllergyAPIModel>();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Allergy, AllergyAPIModel>());
@@ -51,6 +61,7 @@ namespace CMD.PatientService.Domain.Managers
             {
                 result.Add(mapper.Map<AllergyAPIModel>(item));
             }
+            _cache.Set(String.Concat("Allergy-", id), result, DateTimeOffset.Now.AddMinutes(10));
             return result;
         }
 
@@ -58,18 +69,22 @@ namespace CMD.PatientService.Domain.Managers
 
         public IEnumerable<PatientAPIModel> GetAllPatient()
         {
-            var patient = _patientRepository.GetAllPatient();
+            var cached_patients = _cache.Get("Patients");
+            if (cached_patients != null)
+                return (IEnumerable<PatientAPIModel>)cached_patients;
+            var patients = _patientRepository.GetAllPatient();
             ICollection<PatientAPIModel> result = new List<PatientAPIModel>();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Patient, PatientAPIModel>());
             var mapper = new Mapper(config);
 
-            foreach (var item in patient)
+            foreach (var item in patients)
             {
                 var newItem = mapper.Map<PatientAPIModel>(item);
                 var year = DateTime.Now.Year - newItem.DateOfBirth.Year;
                 newItem.Age = year.ToString();
                 result.Add(newItem);
             }
+            _cache.Set("Patients", result, DateTimeOffset.Now.AddMinutes(10));
             return result;
         }
 
@@ -77,6 +92,9 @@ namespace CMD.PatientService.Domain.Managers
 
         public IEnumerable<MedicalProblemAPIModel> GetMedicalProblemsById(int id)
         {
+            var cached_problems = _cache.Get(String.Concat("Problem-", id));
+            if (cached_problems != null)
+                return (IEnumerable<MedicalProblemAPIModel>)cached_problems;
             var problem = _patientRepository.GetMedicalProblemsById(id);
             ICollection<MedicalProblemAPIModel> result = new List<MedicalProblemAPIModel>();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<MedicalProblem, MedicalProblemAPIModel>());
@@ -86,6 +104,7 @@ namespace CMD.PatientService.Domain.Managers
             {
                 result.Add(mapper.Map<MedicalProblemAPIModel>(item));
             }
+            _cache.Set(String.Concat("Problem-", id), result, DateTimeOffset.Now.AddMinutes(10));
             return result;
         }
 
@@ -93,12 +112,18 @@ namespace CMD.PatientService.Domain.Managers
 
         public PatientAPIModel GetPatientById(int id)
         {
+            var cached_patient = (PatientAPIModel)_cache.Get(String.Concat("Patient-", id));
+            if ( cached_patient!= null)
+            {
+                return cached_patient;
+            }
             var patient = _patientRepository.GetPatientById(id);
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Patient, PatientAPIModel>());
             var mapper = new Mapper(config);
             var newItem = mapper.Map<PatientAPIModel>(patient);
             var year = DateTime.Now.Year - newItem.DateOfBirth.Year;
             newItem.Age = year.ToString();
+            _cache.Set(String.Concat("Patient-", id), newItem, DateTimeOffset.Now.AddMinutes(10));
             return newItem;
         }
 
@@ -106,6 +131,9 @@ namespace CMD.PatientService.Domain.Managers
 
         public IEnumerable<SymptomAPIModel> GetSymptomsByPatId(int id)
         {
+            var cached_symptoms = _cache.Get(String.Concat("Symptom-", id));
+            if (cached_symptoms != null)
+                return (IEnumerable<SymptomAPIModel>)cached_symptoms;
             var symptoms = _patientRepository.GetSymptomsByPatId(id);
             ICollection<SymptomAPIModel> result = new List<SymptomAPIModel>();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Symptom, SymptomAPIModel>());
@@ -115,6 +143,7 @@ namespace CMD.PatientService.Domain.Managers
             {
                 result.Add(mapper.Map<SymptomAPIModel>(item));
             }
+            _cache.Set(String.Concat("Symptom-", id), result, DateTimeOffset.Now.AddMinutes(10));
             return result;
         }
 
