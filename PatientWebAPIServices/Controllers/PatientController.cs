@@ -1,4 +1,5 @@
-﻿using CMD.PatientService.Domain.Managers;
+﻿using CMD.PatientService.Domain.APIModels;
+using CMD.PatientService.Domain.Managers;
 using PatientWebAPIServices.Models;
 using System;
 using System.Collections.Generic;
